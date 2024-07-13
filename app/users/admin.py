@@ -21,10 +21,16 @@ class MainUserAdmin(UserAdmin):
 
     fieldsets = [
         ["User additional data", {"fields": ["id", "name"]}],
-        ["Authorization", {"fields": ["is_superuser", "groups", "user_permissions"]}],
+        [
+            "Authorization",
+            {"fields": ["is_superuser", "groups", "user_permissions"]},
+        ],
         ["Authentication", {"fields": ["email", "password"]}],
     ]
     add_fieldsets = [
-        ["Authorization", {"fields": ["is_superuser", "groups", "user_permissions"]}],
+        [
+            "Authorization",
+            {"fields": ["is_superuser", "groups", "user_permissions"]},
+        ],
         ["Authenticated", {"fields": ["email", "password1", "password2"]}],
     ]

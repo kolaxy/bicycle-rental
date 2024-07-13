@@ -6,10 +6,7 @@ from users.managers import UserManager
 
 class User(AbstractUser):
     id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False,
-        unique=True
+        primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
     username = None
     first_name = None
@@ -17,10 +14,7 @@ class User(AbstractUser):
     name = models.CharField(
         max_length=99,
     )
-    email = models.EmailField(
-        max_length=99,
-        unique=True
-    )
+    email = models.EmailField(max_length=99, unique=True)
     added_at = models.DateTimeField(
         auto_now_add=True,
     )
