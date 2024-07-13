@@ -1,0 +1,103 @@
+version: '3.9'
+
+
+networks:
+  br-network:
+    name: br-network
+    driver: bridge
+
+services:
+  app: &app
+    build:
+      context: .
+      dockerfile: compose/local.Dockerfile
+    container_name: br_app_local
+    command: /start
+    restart: always
+    env_file:
+      - local.env
+    volumes:
+      - ./app:/opt/br/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    networks:
+      - br-network
+
+  postgres:
+    image: postgres:13-alpine
+    container_name: br_postgres_local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - local.env
+    environment:
+      - TZ=Europe/Moscow
+    ports:
+      - "5432:5432"
+    networks:
+      - br-network
+
+
+  redis:
+    image: valkey/valkey:7.2.5-alpine3.19
+    container_name: br_redis_local
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - br-network
+    volumes:
+      - redis_data:/data
+
+
+  celery_worker:
+    <<: *app
+    container_name: br_celery_worker_local
+    restart: always
+    env_file:
+      - local.env
+    volumes:
+      - ./app:/opt/br/
+    ports: [ ]
+    command: /start-celeryworker
+    networks:
+      - br-network
+    depends_on:
+      - redis
+
+  celery_beat:
+    <<: *app
+    container_name: br_celery_beat_local
+    restart: always
+    env_file:
+      - local.env
+    volumes:
+      - ./app:/opt/br/
+    ports: [ ]
+    command: /start-celerybeat
+    networks:
+      - br-network
+    depends_on:
+      - redis
+
+  flower:
+    <<: *app
+    container_name: br_flower_local
+    command: /start-flower
+    restart: always
+    env_file:
+      - local.env
+    ports:
+      - "5555:5555"
+    networks:
+      - br-network
+    depends_on:
+      - celery_worker
+      - celery_beat
+      - redis
+
+volumes:
+  postgres_data: {}
+  redis_data: {}
