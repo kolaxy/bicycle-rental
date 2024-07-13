@@ -16,19 +16,7 @@ urlpatterns = [
         TokenRefreshView.as_view(),
         name="token-refresh",
     ),
-    path(
-        "register",
-        UserRegistrationView.as_view(),
-        name="user-registration"
-    ),
-    path(
-        "me",
-        me,
-        name="user-me"
-    ),
-    path(
-        "update",
-        UserUpdateView.as_view(),
-        name="user-update"
-    ),
+    path("register", UserRegistrationView.as_view(), name="user-registration"),
+    path("me", me, name="user-me"),
+    path("update", UserUpdateView.as_view(), name="user-update"),
 ]

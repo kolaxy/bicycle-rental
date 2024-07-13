@@ -14,15 +14,12 @@ class AdminTests(TestCase):
     def setUp(self):
         self.client = Client()
         self.admin_user = User.objects.create_superuser(
-            email='admin@example.com',
-            password='testpass123'
+            email='admin@example.com', password='testpass123'
         )
         self.client.force_login(self.admin_user)
 
         self.user = User.objects.create_user(
-            email='test@example.com',
-            password='testpass123',
-            name='Test User'
+            email='test@example.com', password='testpass123', name='Test User'
         )
 
     def test_user_listed(self):
@@ -74,10 +71,7 @@ class UserManagerTests(TestCase):
         """Test creating a new user with an email is successful"""
         email = 'test@example.com'
         password = 'testpass123'
-        user = User.objects.create_user(
-            email=email,
-            password=password
-        )
+        user = User.objects.create_user(email=email, password=password)
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
@@ -100,10 +94,7 @@ class UserManagerTests(TestCase):
         """Test creating a new superuser"""
         email = 'superuser@example.com'
         password = 'testpass123'
-        user = User.objects.create_superuser(
-            email=email,
-            password=password
-        )
+        user = User.objects.create_superuser(email=email, password=password)
 
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
@@ -116,7 +107,7 @@ class UserManagerTests(TestCase):
             User.objects.create_superuser(
                 email='superuser@example.com',
                 password='test123',
-                is_staff=False
+                is_staff=False,
             )
 
     def test_superuser_must_have_is_superuser(self):
@@ -125,7 +116,7 @@ class UserManagerTests(TestCase):
             User.objects.create_superuser(
                 email='superuser@example.com',
                 password='test123',
-                is_superuser=False
+                is_superuser=False,
             )
 
     def test_validate_password(self):
@@ -148,7 +139,7 @@ class UserRegistrationTests(TestCase):
         data = {
             'email': 'test@example.com',
             'password': 'testpass123',
-            'name': 'Test User'
+            'name': 'Test User',
         }
         response = self.client.post(url, data, format='json')
 
@@ -159,10 +150,7 @@ class UserRegistrationTests(TestCase):
     def test_user_registration_missing_email(self):
         """Test user registration with missing email"""
         url = reverse('user-registration')
-        data = {
-            'password': 'testpass123',
-            'name': 'Test User'
-        }
+        data = {'password': 'testpass123', 'name': 'Test User'}
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -170,7 +158,9 @@ class UserRegistrationTests(TestCase):
 
     def test_me_view_authenticated(self):
         """Test 'user-me' endpoint when user is authenticated"""
-        user = User.objects.create_user(email='test@example.com', password='testpass123', name='Test User')
+        user = User.objects.create_user(
+            email='test@example.com', password='testpass123', name='Test User'
+        )
         self.client.force_authenticate(user=user)
 
         url = reverse('user-me')
@@ -197,7 +187,7 @@ class UserSerializerTests(TestCase):
         payload = {
             'email': 'test@example.com',
             'password': 'testpass123',
-            'name': 'Test User'
+            'name': 'Test User',
         }
         serializer = UserSerializer(data=payload)
         self.assertTrue(serializer.is_valid())
@@ -208,7 +198,9 @@ class UserSerializerTests(TestCase):
 
     def test_update_user(self):
         """Test updating an existing user"""
-        user = User.objects.create_user(email='test@example.com', password='testpass123', name='Test User')
+        user = User.objects.create_user(
+            email='test@example.com', password='testpass123', name='Test User'
+        )
         new_email = 'new_email@example.com'
         new_name = 'Updated Name'
 
@@ -229,7 +221,7 @@ class UserSerializerTests(TestCase):
         payload = {
             'email': 'test@example.com',
             'password': '',
-            'name': 'Test User'
+            'name': 'Test User',
         }
         serializer = UserSerializer(data=payload)
         self.assertFalse(serializer.is_valid())
