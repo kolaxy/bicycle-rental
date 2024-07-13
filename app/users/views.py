@@ -26,6 +26,21 @@ class UserRegistrationView(generics.CreateAPIView):
         )
 
 
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def me(request):

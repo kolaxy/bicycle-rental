@@ -17,8 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
         return super(UserSerializer, self).create(validated_data)
 
     def update(self, instance, validated_data):
-        # Hash the password before saving
-        validated_data["password"] = make_password(
-            validated_data.get("password")
-        )
+        # Handle password separately if present in validated_data
+        if "password" in validated_data:
+            instance.set_password(validated_data.pop("password"))
+
         return super(UserSerializer, self).update(instance, validated_data)
