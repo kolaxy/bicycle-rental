@@ -1,10 +1,11 @@
 import uuid
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from users.managers import UserManager
+from common.models import BaseModel
 
 
-class User(AbstractUser):
+class User(AbstractUser, BaseModel):
     id = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, unique=True
     )
@@ -15,9 +16,6 @@ class User(AbstractUser):
         max_length=99,
     )
     email = models.EmailField(max_length=99, unique=True)
-    added_at = models.DateTimeField(
-        auto_now_add=True,
-    )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["name"]
 
