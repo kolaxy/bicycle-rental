@@ -10,11 +10,41 @@ license bypassing
 - local (can be used in the local development and test section of CI)
 - non-local (used in the server part)
 
+### Dockerfile
+
+This Dockerfile configures a lightweight Python 3.10 environment using Alpine Linux.
+It sets environment variables to optimize Python behavior and exposes port 8000 for the application.
+It copies (local.)requirements.txt to /opt/requirements.txt and updates the package list before installing Bash.
+The Dockerfile then creates a directory structure under /opt/br, sets up a Python virtual environment, and installs
+dependencies from (local.)requirements.txt using pip with specific flags to disable isolation and version checks.
+It ensures the /opt directory and its subdirectories have appropriate permissions.
+Subsequently, it copies multiple start and entrypoint scripts from the (local) compose directory into the container,
+corrects line endings using sed, and makes these scripts executable.
+The PATH environment variable is updated to include the virtual environment's binary directory.
+Finally, it copies the application code to /opt/br/, sets this as the working directory, and defines /entrypoint as the
+container's entry point.
+
+### docker-compose
+
+Local version as example
+
+```shell
+CONTAINER ID   IMAGE                            COMMAND                  CREATED        STATUS          PORTS                              NAMES
+3ec1d5e1284f   bicycle-rental-flower            "/entrypoint /start-…"   10 hours ago   Up 27 minutes   0.0.0.0:5555->5555/tcp, 8000/tcp   br_flower_local
+efc5ce11fb39   bicycle-rental-app               "/entrypoint /start"     10 hours ago   Up 27 minutes   0.0.0.0:8000->8000/tcp             br_app_local
+438b786afe33   bicycle-rental-celery_beat       "/entrypoint /start-…"   10 hours ago   Up 27 minutes   8000/tcp                           br_celery_beat_local
+8944007733e9   bicycle-rental-celery_worker     "/entrypoint /start-…"   10 hours ago   Up 27 minutes   8000/tcp                           br_celery_worker_local
+b017c3b1b514   postgres:13-alpine               "docker-entrypoint.s…"   10 hours ago   Up 15 minutes   0.0.0.0:5432->5432/tcp             br_postgres_local
+859ad49b6de9   valkey/valkey:7.2.5-alpine3.19   "docker-entrypoint.s…"   10 hours ago   Up 27 minutes   0.0.0.0:6379->6379/tcp             br_redis_local
+
+```
+
 In the local project configuration, the app folder on your machine is mounted as a volume to the app folder in the
 container.
 This allows you to make changes to the code and see the updates immediately.
 Additionally, you can use the remote Python interpreter from the container in your IDE, ensuring a convenient and
 efficient development process.
+
 ![interpreter1](docs/interpreter1.png)
 
 Next choose local.docker-compose.yml
@@ -125,3 +155,4 @@ flake8 .
 ![postman](docs/lint.png)
 
 Fix all mistakes and continue your important development.   
+
