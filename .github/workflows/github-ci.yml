@@ -68,9 +68,13 @@ jobs:
         run: sudo apt-get install -y sshpass
 
       - name: Deployment
+        env:
+          SSH_SERVER: ${{ secrets.SERVER_IP }}
+          SSH_USERNAME: ${{ secrets.SERVER_USERNAME }}
+          SSH_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" \
-          ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USERNAME }}"@${{ secrets.SERVER_IP }}" \
+          sshpass -p "${SSH_PASSWORD}" \
+          ssh -o StrictHostKeyChecking=no "${SSH_USERNAME}"@"${SSH_SERVER}" \
             'cd /opt/deploy/ && \
             rm -rf bicycle-rent && \
             git clone git@github.com:kolaxy/bicycle-rental.git && \
