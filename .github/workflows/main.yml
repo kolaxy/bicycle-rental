@@ -38,7 +38,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml -o /opt/br/coverage.xml"
-          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml
           bash <(curl -s https://codecov.io/bash) -f coverage.xml
 
       ### CHANGE /opt/br in case of copy !!!!!!!!!!!!!!!!
