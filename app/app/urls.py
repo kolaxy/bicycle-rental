@@ -40,6 +40,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/users/", include("users.urls")),
     path("api/v1/bicycles/", include("bicycles.urls")),
+    path("api/v1/rentals/", include("rentals.urls")),
     path(
         '',
         schema_view.with_ui('swagger', cache_timeout=0),

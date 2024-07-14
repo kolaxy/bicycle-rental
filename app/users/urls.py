@@ -7,16 +7,16 @@ from .views import UserRegistrationView, me, UserUpdateView
 
 urlpatterns = [
     path(
-        "token",
+        "token/",
         TokenObtainPairView.as_view(),
         name="token-obtain-pair",
     ),
     path(
-        "token/refresh",
+        "token/refresh/",
         TokenRefreshView.as_view(),
         name="token-refresh",
     ),
-    path("register", UserRegistrationView.as_view(), name="user-registration"),
-    path("me", me, name="user-me"),
-    path("update", UserUpdateView.as_view(), name="user-update"),
+    path("register/", UserRegistrationView.as_view(), name="user-registration"),
+    path("me/", me, name="user-me"),
+    path("update/", UserUpdateView.as_view(), name="user-update"),
 ]

@@ -94,3 +94,6 @@ file:
 ```shell
 xdg-open htmlcov/index.html
 ```
+
+### Test API with Postman
+![postman](docs/postman.png)
