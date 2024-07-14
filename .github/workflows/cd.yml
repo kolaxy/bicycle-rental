@@ -1,9 +1,10 @@
 name: Deployment to remote server
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Build, Test and Coverage"]
+    types:
+      - completed
 
 jobs:
   deploy:
