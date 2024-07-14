@@ -58,9 +58,7 @@ jobs:
       - name: Run tests and upload coverage to Codecov
         run: |
           docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml -o /opt/br/coverage.xml"
-          CONTAINER_ID=$(docker ps -q --filter "name=app")
-          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml || echo "Failed to copy coverage.xml"
-          bash <(curl -s https://codecov.io/bash) -f ./coverage.xml
+          bash <(curl -s https://codecov.io/bash) -f app/coverage.xml
 
   docker_code_quality:
     runs-on: ubuntu-latest
