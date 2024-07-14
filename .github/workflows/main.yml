@@ -52,3 +52,9 @@ jobs:
       - name: Check code formatting (black)
         run: |
           docker-compose -f local.docker-compose.yml run --rm app black .
+
+      - name: Upload coverage to Codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          bash <(curl -s https://codecov.io/bash)
