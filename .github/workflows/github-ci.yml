@@ -54,3 +54,18 @@ jobs:
       - name: Upload coverage to Codecov
         run: |
           bash <(curl -s https://codecov.io/bash) -f app/coverage.xml
+
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deployment
+        run: |
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USERNAME }}"@${{ secrets.SERVER_IP }} 'touch /opt/deploy/1'
