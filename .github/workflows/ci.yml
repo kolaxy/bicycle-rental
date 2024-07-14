@@ -32,9 +32,11 @@ jobs:
         run: |
           black --check --config app/pyproject.toml app
 
-  build:
+  test_and_coverage:
     runs-on: ubuntu-latest
-    needs: setup
+    needs: build
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -46,41 +48,10 @@ jobs:
         run: |
           docker-compose -f local.docker-compose.yml build
 
-  test_and_coverage:
-    runs-on: ubuntu-latest
-    needs: build
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Run tests and upload coverage to Codecov
         run: |
           docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml -o /opt/br/coverage.xml"
+
+      - name: Upload coverage to Codecov
+        run: |
           bash <(curl -s https://codecov.io/bash) -f app/coverage.xml
-
-  docker_code_quality:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Check code style (flake8)
-        run: |
-          docker-compose -f local.docker-compose.yml run --rm app flake8 .
-
-      - name: Check code formatting (black)
-        run: |
-          docker-compose -f local.docker-compose.yml run --rm app black --check .
-
-  cleanup:
-    runs-on: ubuntu-latest
-    needs: [test_and_coverage, docker_code_quality]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Clean up
-        run: docker-compose -f local.docker-compose.yml down
