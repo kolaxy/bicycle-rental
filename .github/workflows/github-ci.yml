@@ -76,7 +76,7 @@ jobs:
           sshpass -p "${SSH_PASSWORD}" \
           ssh -o StrictHostKeyChecking=no "${SSH_USERNAME}"@"${SSH_SERVER}" \
             'cd /opt/deploy/ && \
-            rm -rf bicycle-rent && \
+            rm -rf bicycle-rental && \
             git clone git@github.com:kolaxy/bicycle-rental.git && \
             cp env bicycle-rental && \
             cd bicycle-rental && \
