@@ -60,7 +60,8 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           CONTAINER_ID=$(docker ps -q --filter "name=app")
-          docker cp ${CONTAINER_ID}:/opt/br/coverage.xml ./coverage.xml
+          echo $CONTAINER_ID
+          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml
           bash <(curl -s https://codecov.io/bash) -f coverage.xml
 
       - name: Clean up
