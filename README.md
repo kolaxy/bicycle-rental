@@ -1,8 +1,9 @@
 # Bicycle rent
 
 [![codecov](https://codecov.io/github/kolaxy/bicycle-rental/graph/badge.svg?token=LQTWZ4KMHA)](https://codecov.io/github/kolaxy/bicycle-rental)
-![main.yml](https://github.com/kolaxy/bicycle-rental/actions/workflows/main.yml/badge.svg)
 
+![ci.yml](https://github.com/kolaxy/bicycle-rental/actions/workflows/ci.yml/badge.svg)
+ 
 A backend for a bike rental service that provides a RESTful API to perform the most common basic operations with Redis
 license bypassing
 
