@@ -1,4 +1,4 @@
-name: Test, Coverage, and Style Check
+name: Test and Coverage
 
 on:
   push:
@@ -22,35 +22,20 @@ jobs:
 
     - name: Run tests and coverage
       run: |
-        docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml"
-
-    - name: Save coverage report
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-report
-        path: coverage.xml
-
-    - name: Generate coverage badge
-      run: |
-        pip install coverage-badge
-        coverage-badge -i -f -o coverage.svg
+        docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage report"
 
     - name: Check code style (flake8)
       run: |
         docker-compose -f local.docker-compose.yml run --rm app flake8 .
 
-    - name: Check code formatting (black check)
+    - name: Check code formatting (black)
       run: |
         docker-compose -f local.docker-compose.yml run --rm app black --check .
 
-    - name: Update coverage badge in README
+    - name: Check for PEP8 compliance (flake8)
       run: |
-        COVERAGE_PERCENTAGE=$(grep "TOTAL" coverage.xml | awk '{print $4}' | tr -d '%')
-        sed -i "s|https://img.shields.io/badge/coverage-[0-9]*%25-brightgreen|https://img.shields.io/badge/coverage-${COVERAGE_PERCENTAGE}%25-brightgreen|" README.md
+        docker-compose -f local.docker-compose.yml run --rm app flake8 .
 
-    - name: Push changes to GitHub
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Update coverage badge
-        branch: main
-        commit_options: '--no-verify'
+    - name: Check code formatting (black)
+      run: |
+        docker-compose -f local.docker-compose.yml run --rm app black .
