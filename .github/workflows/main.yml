@@ -6,26 +6,33 @@ on:
       - main
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install dependencies - NO BUILD TESTS
+  code_quality:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8 black
 
-      - name: NO-BUILD - Check code style (flake8)
+      - name: Check code style (flake8)
         run: |
           flake8 --config app/setup.cfg app
 
-      - name: NO BUILD - Check code formatting (black check)
+      - name: Check code formatting (black)
         run: |
           black --check --config app/pyproject.toml app
 
+  build:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -33,15 +40,23 @@ jobs:
         run: |
           docker-compose -f local.docker-compose.yml build
 
+  test_and_coverage:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    steps:
       - name: Run tests and upload coverage to Codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml -o /opt/br/coverage.xml"
-          bash <(curl -s https://codecov.io/bash) -f app/coverage.xml
+          CONTAINER_ID=$(docker ps -q --filter "name=app")
+          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml || echo "Failed to copy coverage.xml"
+          bash <(curl -s https://codecov.io/bash) -f ./coverage.xml
 
-      ### CHANGE /opt/br in case of copy !!!!!!!!!!!!!!!!
-
+  docker_code_quality:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Check code style (flake8)
         run: |
           docker-compose -f local.docker-compose.yml run --rm app flake8 .
@@ -50,13 +65,9 @@ jobs:
         run: |
           docker-compose -f local.docker-compose.yml run --rm app black --check .
 
-      - name: Check for PEP8 compliance (flake8)
-        run: |
-          docker-compose -f local.docker-compose.yml run --rm app flake8 .
-
-      - name: Check code formatting (black)
-        run: |
-          docker-compose -f local.docker-compose.yml run --rm app black .
-
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [test_and_coverage, docker_code_quality]
+    steps:
       - name: Clean up
         run: docker-compose -f local.docker-compose.yml down
