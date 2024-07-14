@@ -69,4 +69,11 @@ jobs:
 
       - name: Deployment
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USERNAME }}"@${{ secrets.SERVER_IP }} 'rm -rf  /opt/deploy/bicycle-rent/* && cd /opt/deploy/ && cp env bicycle-rental && cd bicycle-rental && docker compose up -d'
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" \
+          ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USERNAME }}"@${{ secrets.SERVER_IP }}" \
+            'cd /opt/deploy/ && \
+            rm -rf bicycle-rent && \
+            git clone git@github.com:kolaxy/bicycle-rental.git && \
+            cp env bicycle-rental && \
+            cd bicycle-rental && \
+            docker compose up -d'
