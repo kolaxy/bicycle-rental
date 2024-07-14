@@ -36,8 +36,9 @@ jobs:
       - name: Run tests and coverage
         run: |
           docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml"
-          docker cp $(docker-compose -f local.docker-compose.yml ps -q app):/app/coverage.xml ./coverage.xml
+          docker cp $(docker compose -f local.docker-compose.yml ps -q app):/opt/br/coverage.xml ./coverage.xml
 
+      ### CHANGE /opt/br in case of copy !!!!!!!!!!!!!!!!
 
       - name: Check code style (flake8)
         run: |
