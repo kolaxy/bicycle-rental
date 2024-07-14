@@ -1,8 +1,8 @@
-name: Deployment to remote server
+name: CD
 
 on:
   workflow_run:
-    workflows: ["Build, Test and Coverage"]
+    workflows: ["CI"]
     types:
       - completed
 
