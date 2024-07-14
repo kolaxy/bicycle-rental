@@ -10,11 +10,17 @@ User = get_user_model()
 
 
 class Rental(models.Model):
-    bicycle = models.ForeignKey("bicycles.Bicycle", related_name='rentals', on_delete=models.CASCADE)
-    renter = models.ForeignKey("users.User", related_name='rentals', on_delete=models.CASCADE)
+    bicycle = models.ForeignKey(
+        "bicycles.Bicycle", related_name='rentals', on_delete=models.CASCADE
+    )
+    renter = models.ForeignKey(
+        "users.User", related_name='rentals', on_delete=models.CASCADE
+    )
     start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(blank=True, null=True)
-    total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    total_cost = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0.00
+    )
     is_returned = models.BooleanField(default=False)
 
     def calculate_cost(self):
@@ -30,8 +36,14 @@ class Rental(models.Model):
 
     def clean(self):
         super().clean()
-        if self.start_time and self.end_time and self.end_time <= self.start_time:
-            raise ValidationError(_('End time must be greater than start time.'))
+        if (
+            self.start_time
+            and self.end_time
+            and self.end_time <= self.start_time
+        ):
+            raise ValidationError(
+                _('End time must be greater than start time.')
+            )
 
     def return_bicycle(self):
         if not self.is_returned:

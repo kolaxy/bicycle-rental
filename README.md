@@ -67,15 +67,16 @@ libraries.
 - **flake8 7.1.0** - Tool for enforcing Python style guide and checking code quality. (used in CI job)
 - **coverage 7.6.0** - A tool for measuring code coverage of Python programs.
 
-### Test section
+## Testing section
 
 You can manually test application from your docker container before pushing.
 
-#### CI:
+### CI:
 
-- Lint test
+- Lint test.
 - Code test
 - Coverage report
+
 ```shell
 docker exec -it br_app_local sh
 ```
@@ -84,8 +85,16 @@ docker exec -it br_app_local sh
 coverage run --source='.' manage.py test
 ```
 
+To see results in your console
+
 ```shell
 coverage report
+```
+
+To generate results in the hidden htmlcov folder
+
+```shell
+coverage html
 ```
 
 To see HTML report at your browser cd to the `/bicycle-rental/app` directory at your system or just open generated HTML
@@ -96,4 +105,23 @@ xdg-open htmlcov/index.html
 ```
 
 ### Test API with Postman
+
 ![postman](docs/postman.png)
+
+### Lint test and code quality
+
+Manually in container. This will make code prettier.
+
+```shell
+black .
+``` 
+
+Then
+
+```shell
+flake8 .
+```
+
+![postman](docs/lint.png)
+
+Fix all mistakes and continue your important development.   

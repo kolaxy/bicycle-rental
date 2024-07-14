@@ -13,7 +13,6 @@ from bicycles.admin import BicycleAdmin
 
 from bicycles.models import Bicycle
 from bicycles.serializers import BicycleSerializer
-from users.models import User
 
 User = get_user_model()
 

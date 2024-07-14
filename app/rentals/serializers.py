@@ -3,7 +3,9 @@ from .models import Rental
 
 
 class RentalSerializer(serializers.ModelSerializer):
-    renter = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+    renter = serializers.PrimaryKeyRelatedField(
+        read_only=True, default=serializers.CurrentUserDefault()
+    )
 
     class Meta:
         model = Rental

@@ -15,8 +15,14 @@ class BaseModel(models.Model):
 
     @property
     def created(self):
-        return f'{self.added_at.strftime("%X")} {self.added_at.strftime("%x")}'
+        return (
+            f'{self.added_at.strftime("%X")}'
+            f' {self.added_at.strftime("%x")}'
+        )
 
     @property
     def updated(self):
-        return f'{self.updated_at.strftime("%X")} {self.updated_at.strftime("%x")}'
+        return (
+            f'{self.updated_at.strftime("%X")} '
+            f'{self.updated_at.strftime("%x")}'
+        )

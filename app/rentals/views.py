@@ -8,7 +8,10 @@ from .serializers import RentalSerializer
 
 class RentalCreateAPIView(generics.CreateAPIView):
     serializer_class = RentalSerializer
-    permission_classes = [permissions.IsAuthenticated, IsRentalOwnerOrSuperuser]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsRentalOwnerOrSuperuser,
+    ]
 
     def perform_create(self, serializer):
         bicycle_instance = serializer.validated_data.get('bicycle')
@@ -24,16 +27,24 @@ class RentalCreateAPIView(generics.CreateAPIView):
 class RentalDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Rental.objects.all()
     serializer_class = RentalSerializer
-    permission_classes = [permissions.IsAuthenticated, IsRentalOwnerOrSuperuser]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsRentalOwnerOrSuperuser,
+    ]
     http_method_names = ['get', 'patch']
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
 
         if instance.is_returned:
-            return Response({"error": "Cannot finish a returned rental."}, status=status.HTTP_403_FORBIDDEN)
+            return Response(
+                {"error": "Cannot finish a returned rental."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 

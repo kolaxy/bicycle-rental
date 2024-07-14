@@ -47,7 +47,7 @@ class AdminTests(TestCase):
         self.assertEqual(res.status_code, 200)
 
     def test_fieldsets(self):
-        """Test the fieldsets are correctly displayed on the user change page"""
+        """Test the fieldsets are correctly displayed onthe user change page"""
         url = reverse('admin:users_user_change', args=[self.user.id])
         res = self.client.get(url)
 

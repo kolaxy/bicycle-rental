@@ -6,3 +6,4 @@ local.env
 /app/logs/
 /app/vol/
 app/htmlcov
+*.coverage
