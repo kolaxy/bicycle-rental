@@ -10,45 +10,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Install dependencies - NO BUILD TESTS
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 black
+      - name: Install dependencies - NO BUILD TESTS
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 black
 
-    - name: NO-BUILD - Check code style (flake8)
-      run: |
-        flake8 .
+      - name: NO-BUILD - Check code style (flake8)
+        run: |
+          flake8 app
 
-    - name: NO BUILD - Check code formatting (black check)
-      run: |
-        black --check .
+      - name: NO BUILD - Check code formatting (black check)
+        run: |
+          black --check app
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Build Docker image
-      run: |
-        docker-compose -f local.docker-compose.yml build
+      - name: Build Docker image
+        run: |
+          docker-compose -f local.docker-compose.yml build
 
-    - name: Run tests and coverage
-      run: |
-        docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage report"
+      - name: Run tests and coverage
+        run: |
+          docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage report"
 
-    - name: Check code style (flake8)
-      run: |
-        docker-compose -f local.docker-compose.yml run --rm app flake8 .
+      - name: Check code style (flake8)
+        run: |
+          docker-compose -f local.docker-compose.yml run --rm app flake8 .
 
-    - name: Check code formatting (black)
-      run: |
-        docker-compose -f local.docker-compose.yml run --rm app black --check .
+      - name: Check code formatting (black)
+        run: |
+          docker-compose -f local.docker-compose.yml run --rm app black --check .
 
-    - name: Check for PEP8 compliance (flake8)
-      run: |
-        docker-compose -f local.docker-compose.yml run --rm app flake8 .
+      - name: Check for PEP8 compliance (flake8)
+        run: |
+          docker-compose -f local.docker-compose.yml run --rm app flake8 .
 
-    - name: Check code formatting (black)
-      run: |
-        docker-compose -f local.docker-compose.yml run --rm app black .
+      - name: Check code formatting (black)
+        run: |
+          docker-compose -f local.docker-compose.yml run --rm app black .
