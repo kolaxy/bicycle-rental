@@ -33,9 +33,14 @@ jobs:
         run: |
           docker-compose -f local.docker-compose.yml build
 
-      - name: Run tests and coverage
+      - name: Run tests and upload coverage to Codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
           docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml"
+          CONTAINER_ID=$(docker ps -q --filter "name=app")
+          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml
+          bash <(curl -s https://codecov.io/bash) -f coverage.xml
 
       ### CHANGE /opt/br in case of copy !!!!!!!!!!!!!!!!
 
@@ -54,16 +59,6 @@ jobs:
       - name: Check code formatting (black)
         run: |
           docker-compose -f local.docker-compose.yml run --rm app black .
-
-      # docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml
-      - name: Upload coverage to Codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: |
-          CONTAINER_ID=$(docker ps -q --filter "name=app")
-          echo $CONTAINER_ID
-          docker cp br_app_local:/opt/br/coverage.xml ./coverage.xml
-          bash <(curl -s https://codecov.io/bash) -f coverage.xml
 
       - name: Clean up
         run: docker-compose -f local.docker-compose.yml down
