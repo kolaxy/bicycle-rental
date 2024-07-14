@@ -12,7 +12,7 @@ license bypassing
 
 ### Dockerfile
 
-This Dockerfile configures a lightweight Python 3.10 environment using Alpine Linux.
+Dockerfile in this project configures a lightweight Python 3.10 environment using Alpine Linux.
 It sets environment variables to optimize Python behavior and exposes port 8000 for the application.
 It copies (local.)requirements.txt to /opt/requirements.txt and updates the package list before installing Bash.
 The Dockerfile then creates a directory structure under /opt/br, sets up a Python virtual environment, and installs
@@ -240,3 +240,7 @@ cd bicycle-rental && docker compose up -d
 - PUT /users/update/ - Update user information.
 
 - PATCH /users/update/ - Partially update user information.
+
+## Deploy
+
+Use centos 7 on your VPS

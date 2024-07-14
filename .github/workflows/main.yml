@@ -18,24 +18,24 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker-compose -f docker-compose.yml build
+        docker-compose -f local.docker-compose.yml build
 
     - name: Run tests and coverage
       run: |
-        docker-compose -f docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage report"
+        docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage report"
 
     - name: Check code style (flake8)
       run: |
-        docker-compose -f docker-compose.yml run --rm app flake8 .
+        docker-compose -f local.docker-compose.yml run --rm app flake8 .
 
     - name: Check code formatting (black)
       run: |
-        docker-compose -f docker-compose.yml run --rm app black --check .
+        docker-compose -f local.docker-compose.yml run --rm app black --check .
 
     - name: Check for PEP8 compliance (flake8)
       run: |
-        docker-compose -f docker-compose.yml run --rm app flake8 --max-line-length=88 --ignore=E203,W503,W291 .
+        docker-compose -f local.docker-compose.yml run --rm app flake8 .
 
     - name: Check code formatting (black)
       run: |
-        docker-compose -f docker-compose.yml run --rm app black .
+        docker-compose -f local.docker-compose.yml run --rm app black .
