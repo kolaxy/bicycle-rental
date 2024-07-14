@@ -56,7 +56,7 @@ Next choose local.docker-compose.yml
 One image for 4 containers (shared style, build 1 time and up via different commands)
 
 - Django as web framework
-- Celery as worker
+- Celery as worker.
 - Celery Beat as scheduler
 - Flower to monitor and control tasks + export to Grafana via API.
 
@@ -96,6 +96,42 @@ libraries.
 - **black 24.4.2** - Uncompromising Python code formatter ensuring consistent style.
 - **flake8 7.1.0** - Tool for enforcing Python style guide and checking code quality. (used in CI job)
 - **coverage 7.6.0** - A tool for measuring code coverage of Python programs.
+- **drf-ysdg** - A Swagger / OpenAPI 2 generation tool implemented without using the schema generation provided by
+  Django Rest Framework
+
+## Celery
+
+![celery](docs/celery.png)
+![schema](docs/schema.png)
+
+Celery is a simple, flexible, and reliable distributed system to process vast amounts of messages, while providing
+operations with the tools required to maintain such a system.
+It’s a task queue with focus on real-time processing, while also supporting task scheduling.
+
+In this project you can import `@task` decorator and call this function with, e.g. `.delay()`
+
+[Documentation](https://docs.celeryq.dev/en/stable/index.html)
+
+## Celery Beat
+
+celery beat is a scheduler; It kicks off tasks at regular intervals, that are then executed by available worker nodes in
+the cluster.
+
+By default the entries are taken from the beat_schedule setting, but custom stores can also be used, like storing the
+entries in a SQL database.
+
+You have to ensure only a single scheduler is running for a schedule at a time, otherwise you’d end up with duplicate
+tasks. Using a centralized approach means the schedule doesn’t have to be synchronized, and the service can operate
+without using locks.
+
+Use it like a CRON to send daily reports, messages ect.
+
+[Documentation](https://docs.celeryq.dev/en/stable/userguide/periodic-tasks.html)
+
+## Flower
+
+Flower is an open-source web application for monitoring and managing Celery clusters. It provides real-time information
+about the status of Celery workers and tasks.
 
 ## Testing section
 
@@ -140,13 +176,13 @@ xdg-open htmlcov/index.html
 
 ### Lint test and code quality
 
-Manually in container. This will make code prettier.
+Manually in container. This will make code prettier. You can change config at `app/pyproject.toml`
 
 ```shell
 black .
 ``` 
 
-Then
+Then check with Flake8. You can change config at `setup.cfg`
 
 ```shell
 flake8 .
@@ -154,5 +190,53 @@ flake8 .
 
 ![postman](docs/lint.png)
 
-Fix all mistakes and continue your important development.   
+Fix all mistakes and continue your important development.
 
+## Local development
+
+Make sure that you have Docker engine.
+
+```shell
+git clone @github.com:kolaxy/bicycle-rental.git
+```
+
+```shell
+cd bicycle-rental && docker compose up -d 
+```
+
+- `http://0.0.0.0:8000/` - Swagger documentation
+  ![swagger](docs/swagger.png)
+- `http://0.0.0.0:8000/` - ADMIN Panel. Create your superuser with `python manage.py createsuperuser` in your container.
+  ![admin](docs/admin.png)
+- `http://0.0.0.0:5555/flower` - Flower to track celery tasks
+  ![flower](docs/flower.png)
+
+### Endpoints
+
+#### Bicycles
+
+- GET /bicycles/available/ - Retrieve available bicycles.
+
+#### Rentals
+
+- POST /rentals/create/ - Create a new rental.
+
+- GET /rentals/history/ - Retrieve rental history.
+
+- GET /rentals/{id}/ - Retrieve a rental by ID.
+
+- PATCH /rentals/{id}/ - Partially update a rental.
+
+#### Users
+
+- GET /users/me/ - Retrieve authenticated user's email.
+
+- POST /users/register/ - Register a new user.
+
+- POST /users/token/ - Obtain JWT tokens.
+
+- POST /users/token/refresh/ - Refresh JWT tokens.
+
+- PUT /users/update/ - Update user information.
+
+- PATCH /users/update/ - Partially update user information.
