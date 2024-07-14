@@ -35,8 +35,8 @@ jobs:
 
       - name: Run tests and coverage
         run: |
-          docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml -o /code/coverage.xml"
-          docker cp $(docker-compose -f local.docker-compose.yml ps -q app):/code/coverage.xml ./coverage.xml
+          docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml"
+          docker cp $(docker-compose -f local.docker-compose.yml ps -q app):/app/coverage.xml ./coverage.xml
 
 
       - name: Check code style (flake8)
