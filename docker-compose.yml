@@ -75,6 +75,7 @@ services:
       - br-network
     depends_on:
       - redis
+      - postgres
 
   celery_beat:
     <<: *app
@@ -90,6 +91,7 @@ services:
       - br-network
     depends_on:
       - redis
+      - postgres
 
   flower:
     <<: *app
