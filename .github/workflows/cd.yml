@@ -18,4 +18,4 @@ jobs:
 
       - name: Deployment
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USERNAME }}"@${{ secrets.SERVER_IP }} 'touch 1'
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USERNAME }}"@${{ secrets.SERVER_IP }}" 'touch /opt/deploy/1'
