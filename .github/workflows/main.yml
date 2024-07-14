@@ -61,8 +61,9 @@ jobs:
         run: |
           CONTAINER_ID=$(docker ps -q --filter "name=app")
           echo $CONTAINER_ID
-          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml
-#          bash <(curl -s https://codecov.io/bash) -f coverage.xml
+#          docker cp $CONTAINER_ID:/opt/br/coverage.xml ./coverage.xml
+          docker cp br_app_local::/opt/br/coverage.xml ./coverage.xml
+          bash <(curl -s https://codecov.io/bash) -f coverage.xml
 
       - name: Clean up
         run: docker-compose -f local.docker-compose.yml down
