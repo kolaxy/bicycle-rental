@@ -241,6 +241,41 @@ cd bicycle-rental && docker compose up -d
 
 - PATCH /users/update/ - Partially update user information.
 
-## Deploy
+## Infrastructure and CI/CD
 
-Use centos 7 on your VPS
+Centos 7 - Based
+
+### Server configuration
+
+```shell
+sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo systemctl start docker
+cd /opt/
+mkdir deploy
+cd deploy/
+```
+
+### Generate SSH key for GitHub
+
+```shell
+ssh-keygen -t rsa -b 4096 -C "vybornoff@outlook.com" -f ~/.ssh/deploy_key
+cat deploy_key.pub
+```
+
+Add your key to the `Deploy keys` section in your repo.
+[https://github.com/kolaxy/bicycle-rental/settings/keys](https://github.com/kolaxy/bicycle-rental/settings/keys)
+
+```bash
+vi config
+```
+
+Insert config data
+
+```shell
+Host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/deploy_key
+  User git
+```
