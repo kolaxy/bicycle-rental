@@ -22,5 +22,4 @@ jobs:
 
       - name: Deployment
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@{{ secrets.SERVER_IP }} cd /opt/deploy && \
-            touch 1
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "cd /opt/deploy && touch 1"
