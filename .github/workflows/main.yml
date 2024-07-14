@@ -20,11 +20,11 @@ jobs:
 
       - name: NO-BUILD - Check code style (flake8)
         run: |
-          flake8 app
+          flake8 --config .flake8 app
 
       - name: NO BUILD - Check code formatting (black check)
         run: |
-          black --check app
+          black --check --config black.cfg app
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
