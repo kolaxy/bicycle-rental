@@ -35,7 +35,9 @@ jobs:
 
       - name: Run tests and coverage
         run: |
-          docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage report"
+          docker-compose -f local.docker-compose.yml run --rm app sh -c "coverage run --source='.' manage.py test && coverage xml -o /code/coverage.xml"
+          docker cp $(docker-compose -f local.docker-compose.yml ps -q app):/code/coverage.xml ./coverage.xml
+
 
       - name: Check code style (flake8)
         run: |
@@ -57,4 +59,8 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          bash <(curl -s https://codecov.io/bash)
+          docker cp $(docker ps -q -f name=app):/code/coverage.xml coverage.xml
+          bash <(curl -s https://codecov.io/bash) -f coverage.xml
+
+      - name: Clean up
+        run: docker-compose -f local.docker-compose.yml down
