@@ -2,7 +2,7 @@
 /__pycache__/
 /venv
 *.pyc
-local.env
+#local.env
 /app/logs/
 /app/vol/
 app/htmlcov
