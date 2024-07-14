@@ -59,7 +59,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          docker cp $(docker compose -f local.docker-compose.yml ps -q app):/opt/br/coverage.xml ./coverage.xml
+          docker cp $(docker-compose -f local.docker-compose.yml ps -q app):/opt/br/coverage.xml ./coverage.xml
           bash <(curl -s https://codecov.io/bash) -f coverage.xml
 
       - name: Clean up
