@@ -75,8 +75,9 @@ jobs:
         run: |
           sshpass -p "${SSH_PASSWORD}" \
           ssh -o StrictHostKeyChecking=no "${SSH_USERNAME}"@"${SSH_SERVER}" \
-            'cd /opt/deploy/ && \
+            'cd /opt/deploy/bicycle-rental && \
             docker compose down || true && \
+            cd .. && \
             rm -rf bicycle-rental && \
             git clone git@github.com:kolaxy/bicycle-rental.git && \
             cp env bicycle-rental && \
