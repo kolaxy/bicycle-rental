@@ -22,14 +22,13 @@ services:
     depends_on:
       - app
 
-
   nginx_exporter:
     image: nginx/nginx-prometheus-exporter:0.10.0
     container_name: br_nginx_exporter
     ports:
       - "9113:9113"
     environment:
-      - NGINX_STATUS_URL=http://127.0.0.1:80/nginx_status
+      - NGINX_STATUS_URL=http://nginx:80/nginx_status
     networks:
       - br-network
     depends_on:
@@ -115,7 +114,7 @@ services:
     networks:
       - br-network
     ports:
-      - "127.0.0.1:5555:5555"
+      - "5555:5555"
     depends_on:
       - celery_worker
       - celery_beat
@@ -138,13 +137,14 @@ services:
     container_name: br_grafana
     ports:
       - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
     networks:
       - br-network
     depends_on:
       - prometheus
-    environment:
-      - GF_SERVER_ROOT_URL=https://45.12.19.157/grafana/
 
 volumes:
-  postgres_data: {}
-  redis_data: {}
+  postgres_data: { }
+  redis_data: { }
+  grafana_data: { }
