@@ -29,6 +29,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://kolaxy.ru",
+    "https://kolaxy.ru",
+]
+
+
 # Application definition
 
 INSTALLED_APPS = [
