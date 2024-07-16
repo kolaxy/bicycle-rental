@@ -30,9 +30,7 @@ services:
       - br-network
     depends_on:
       - nginx
-    command:
-      - -nginx.scrape-uri
-      - http://br_nginx:80/nginx_status
+    command: sh -c 'sleep 1 && while ! nc -z br_nginx 80; do sleep 1; done && /nginx-exporter-binary -nginx.scrape-uri http://br_nginx:80/nginx_status'
 
 
   app: &app

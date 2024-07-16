@@ -141,6 +141,15 @@ Use it like a CRON to send daily reports, messages ect.
 Flower is an open-source web application for monitoring and managing Celery clusters. It provides real-time information
 about the status of Celery workers and tasks.
 
+## Prometheus
+
+An open-source monitoring system with a dimensional data model, flexible query language, efficient time series database
+and modern alerting approach.
+
+## Grafana
+
+The open source analytics & monitoring solution for every database.
+
 ## Testing section
 
 You can manually test application from your docker container before pushing.
@@ -301,5 +310,23 @@ Update
 
 Set your env file at the `deploy` folder
 
-### Monitoring
+## Monitoring
 
+2 Dashbords added via Prometheus source.
+
+### How to add Prometheus source?
+
+- Log in to Grafana
+- Add Prometheus source `http://prometheus:9090`
+
+### Nginx exporter
+
+https://grafana.com/api/dashboards/12708/revisions/1/download
+
+![nginx-exporter](docs/grafana_nginx_exporter.png)
+
+### Node exporter
+
+https://grafana.com/api/dashboards/1860/revisions/37/download
+
+![node-exporter](docs/grafana_node_exporter.png)
