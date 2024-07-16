@@ -142,7 +142,8 @@ services:
     depends_on:
       - prometheus
     environment:
-      - GF_PATH_PREFIX=/grafana
+      GF_SERVER_ROOT_URL: https://kolaxy.ru/grafana
+      GF_SERVER_SERVE_FROM_SUB_PATH: 'true'
     ports:
       - "3000:3000"
 
