@@ -109,6 +109,7 @@ services:
       - br-network
     depends_on:
       - app
+      - grafana
 
   nginx_exporter:
     image: nginx/nginx-prometheus-exporter:0.10.0
@@ -132,8 +133,6 @@ services:
       - "9090:9090"
     networks:
       - br-network
-    depends_on:
-      - nginx_exporter
 
   grafana:
     image: grafana/grafana:latest
