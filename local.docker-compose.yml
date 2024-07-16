@@ -1,6 +1,5 @@
 version: '3.9'
 
-
 networks:
   br-network:
     name: br-network
@@ -40,7 +39,6 @@ services:
     networks:
       - br-network
 
-
   redis:
     image: valkey/valkey:7.2.5-alpine3.19
     container_name: br_redis_local
@@ -52,7 +50,6 @@ services:
     volumes:
       - redis_data:/data
 
-
   celery_worker:
     <<: *app
     container_name: br_celery_worker_local
@@ -61,7 +58,7 @@ services:
       - local.env
     volumes:
       - ./app:/opt/br/
-    ports: [ ]
+    ports: []
     command: /start-celeryworker
     networks:
       - br-network
@@ -77,7 +74,7 @@ services:
       - local.env
     volumes:
       - ./app:/opt/br/
-    ports: [ ]
+    ports: []
     command: /start-celerybeat
     networks:
       - br-network
@@ -101,41 +98,66 @@ services:
       - celery_beat
       - redis
 
-#  nginx_exporter:
-#    image: nginx/nginx-prometheus-exporter:0.10.0
-#    container_name: br_nginx_exporter
-#    ports:
-#      - "9113:9113"
-#    environment:
-#      - NGINX_STATUS_URL=http://br_nginx/nginx_status
-#    networks:
-#      - br-network
-#    depends_on:
-#      - nginx
-#
-#  prometheus:
-#    image: prom/prometheus:latest
-#    container_name: br_prometheus
-#    volumes:
-#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-#    ports:
-#      - "9090:9090"
-#    networks:
-#      - br-network
-#    depends_on:
-#      - nginx_exporter
-#
-#  grafana:
-#    image: grafana/grafana:latest
-#    container_name: br_grafana
-#    ports:
-#      - "3000:3000"
-#    networks:
-#      - br-network
-#    depends_on:
-#      - prometheus
+  nginx:
+    image: nginx:1.27.0-alpine3.19
+    container_name: br_nginx_local
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/local.nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - br-network
+    depends_on:
+      - app
 
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:0.10.0
+    container_name: br_nginx_exporter_local
+    ports:
+      - "9113:9113"
+    networks:
+      - br-network
+    depends_on:
+      - nginx
+    command:
+      - -nginx.scrape-uri
+      - http://br_nginx_local:80/nginx_status
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: br_prometheus_local
+    volumes:
+      - ./prometheus/local.prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - br-network
+    depends_on:
+      - nginx_exporter
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: br_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - br-network
+    depends_on:
+      - prometheus
+
+  grafana_datasource:
+    image: grafana/grafana-image-renderer:latest
+    container_name: br_grafana_renderer
+    ports:
+      - "8081:8081"
+    networks:
+      - br-network
+    depends_on:
+      - grafana
 
 volumes:
   postgres_data: {}
   redis_data: {}
+  grafana_data: {}

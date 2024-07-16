@@ -33,14 +33,18 @@ container's entry point.
 Local version as example
 
 ```shell
-CONTAINER ID   IMAGE                            COMMAND                  CREATED        STATUS          PORTS                              NAMES
-3ec1d5e1284f   bicycle-rental-flower            "/entrypoint /start-…"   10 hours ago   Up 27 minutes   0.0.0.0:5555->5555/tcp, 8000/tcp   br_flower_local
-efc5ce11fb39   bicycle-rental-app               "/entrypoint /start"     10 hours ago   Up 27 minutes   0.0.0.0:8000->8000/tcp             br_app_local
-438b786afe33   bicycle-rental-celery_beat       "/entrypoint /start-…"   10 hours ago   Up 27 minutes   8000/tcp                           br_celery_beat_local
-8944007733e9   bicycle-rental-celery_worker     "/entrypoint /start-…"   10 hours ago   Up 27 minutes   8000/tcp                           br_celery_worker_local
-b017c3b1b514   postgres:13-alpine               "docker-entrypoint.s…"   10 hours ago   Up 15 minutes   0.0.0.0:5432->5432/tcp             br_postgres_local
-859ad49b6de9   valkey/valkey:7.2.5-alpine3.19   "docker-entrypoint.s…"   10 hours ago   Up 27 minutes   0.0.0.0:6379->6379/tcp             br_redis_local
-
+CONTAINER ID   IMAGE                                    COMMAND                  CREATED          STATUS              PORTS                              NAMES
+b31c429e2678   grafana/grafana-image-renderer:latest    "dumb-init -- node b…"   3 minutes ago    Up About a minute   0.0.0.0:8081->8081/tcp             br_grafana_renderer
+f72f4315c324   grafana/grafana:latest                   "/run.sh"                3 minutes ago    Up About a minute   0.0.0.0:3000->3000/tcp             br_grafana
+8c698ba08a9f   prom/prometheus:latest                   "/bin/prometheus --c…"   3 minutes ago    Up About a minute   0.0.0.0:9090->9090/tcp             br_prometheus_local
+c0e450937659   nginx/nginx-prometheus-exporter:0.10.0   "/usr/bin/nginx-prom…"   15 minutes ago   Up About a minute   0.0.0.0:9113->9113/tcp             br_nginx_exporter_local
+2b83e49232ac   nginx:1.27.0-alpine3.19                  "/docker-entrypoint.…"   31 minutes ago   Up About a minute   0.0.0.0:80->80/tcp                 br_nginx_local
+d5e76ef079cb   bicycle-rental-flower                    "/entrypoint /start-…"   31 minutes ago   Up About a minute   0.0.0.0:5555->5555/tcp, 8000/tcp   br_flower_local
+3802068d8470   bicycle-rental-celery_worker             "/entrypoint /start-…"   31 minutes ago   Up About a minute   8000/tcp                           br_celery_worker_local
+07c08161ba7a   bicycle-rental-celery_beat               "/entrypoint /start-…"   31 minutes ago   Up About a minute   8000/tcp                           br_celery_beat_local
+46f2e3f3c360   bicycle-rental-app                       "/entrypoint /start"     31 minutes ago   Up About a minute   0.0.0.0:8000->8000/tcp             br_app_local
+ff3d8d283db6   valkey/valkey:7.2.5-alpine3.19           "docker-entrypoint.s…"   31 minutes ago   Up About a minute   0.0.0.0:6379->6379/tcp             br_redis_local
+b179646d5c7c   postgres:13-alpine                       "docker-entrypoint.s…"   31 minutes ago   Up About a minute   0.0.0.0:5432->5432/tcp             br_postgres_local
 ```
 
 In the local project configuration, the app folder on your machine is mounted as a volume to the app folder in the
@@ -214,6 +218,8 @@ cd bicycle-rental && docker compose up -d
   ![admin](docs/admin.png)
 - `http://0.0.0.0:5555/flower` - Flower to track celery tasks
   ![flower](docs/flower.png)
+- `http://0.0.0.0:3000/` - Grafana to monitor Nginx (Add celery with exporter, Django monitoring as you wish)
+  ![grafana](docs/grafana.png)
 
 ### Endpoints
 
@@ -292,4 +298,8 @@ Update
 - `SERVER_IP`
 - `SERVER_USERNAME`
 - `SERVER_PASSWORD`
+
+Set your env file at the `deploy` folder
+
+### Monitoring
 
