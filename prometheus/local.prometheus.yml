@@ -2,6 +2,9 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: 'nginx_local'
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['br_node_exporter_local:9100']
+  - job_name: 'nginx'
     static_configs:
       - targets: ['br_nginx_exporter_local:9113']
