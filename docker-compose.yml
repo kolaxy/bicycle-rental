@@ -27,12 +27,14 @@ services:
     container_name: br_nginx_exporter
     ports:
       - "9113:9113"
-    environment:
-      - NGINX_STATUS_URL=http://nginx:80/nginx_status
     networks:
       - br-network
     depends_on:
       - nginx
+    command:
+      - -nginx.scrape-uri
+      - http://br_nginx:80/nginx_status
+
 
   app: &app
     build:
