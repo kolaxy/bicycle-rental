@@ -146,6 +146,16 @@ services:
     depends_on:
       - prometheus
 
+  grafana_datasource:
+    image: grafana/grafana-image-renderer:latest
+    container_name: br_grafana_renderer
+    ports:
+      - "8081:8081"
+    networks:
+      - br-network
+    depends_on:
+      - grafana
+
 volumes:
   postgres_data: { }
   redis_data: { }
