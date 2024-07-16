@@ -127,8 +127,6 @@ services:
     container_name: br_prometheus
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
     networks:
       - br-network
     depends_on:
@@ -137,20 +135,18 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: br_grafana
-#    ports:
-#      - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
     networks:
       - br-network
     depends_on:
       - prometheus
+    ports:
+      - "3000:3000"
 
   grafana_datasource:
     image: grafana/grafana-image-renderer:latest
     container_name: br_grafana_renderer
-#    ports:
-#      - "8081:8081"
     networks:
       - br-network
     depends_on:
