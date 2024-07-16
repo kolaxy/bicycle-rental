@@ -1,11 +1,9 @@
 version: '3.9'
 
-
 networks:
   br-network:
     name: br-network
     driver: bridge
-
 
 services:
 
@@ -23,6 +21,18 @@ services:
       - br-network
     depends_on:
       - app
+
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:0.10.0
+    container_name: br_nginx_exporter
+    ports:
+      - "9113:9113"
+    environment:
+      - NGINX_STATUS_URL=http://br_nginx/nginx_status
+    networks:
+      - br-network
+    depends_on:
+      - nginx
 
   app: &app
     build:
@@ -53,16 +63,14 @@ services:
     networks:
       - br-network
 
-
   redis:
-    image: valkey/valkey:7.2.5-alpine3.19
+    image: redis:7.2.5-alpine3.19
     container_name: br_redis
     restart: always
     networks:
       - br-network
     volumes:
       - redis_data:/data
-
 
   celery_worker:
     <<: *app
@@ -107,12 +115,35 @@ services:
       - br-network
     ports:
       - "127.0.0.1:5555:5555"
-
     depends_on:
       - celery_worker
       - celery_beat
       - redis
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: br_prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - br-network
+    depends_on:
+      - nginx_exporter
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: br_grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - br-network
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SERVER_ROOT_URL=https://45.12.19.157/grafana/
+
 volumes:
-  postgres_data: { }
-  redis_data: { }
+  postgres_data: {}
+  redis_data: {}
