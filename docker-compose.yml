@@ -21,7 +21,6 @@ services:
       - br-network
     depends_on:
       - app
-      - grafana
 
 
   nginx_exporter:
