@@ -20,6 +20,7 @@ services:
       - br-network
     depends_on:
       - app
+      - grafana
 
   nginx_exporter:
     image: nginx/nginx-prometheus-exporter:0.10.0
