@@ -100,7 +100,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/nginx/certificate.crt:/etc/nginx/certificate.crt:ro
       - /etc/nginx/private.key:/etc/nginx/private.key:ro
-      - /etc/letsencrypt/live/kolaxy.ru:/etc/letsencrypt/live/kolaxy.ru
+      - /etc/letsencrypt:/etc/letsencrypt
     networks:
       - br-network
     depends_on:
